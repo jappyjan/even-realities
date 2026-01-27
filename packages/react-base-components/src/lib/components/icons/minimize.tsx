@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface MinimizeIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const MinimizeIcon = React.forwardRef<SVGSVGElement, MinimizeIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="598 212.925 32 32" title={title} {...props}>
+      <path d="M614 242.925H612V230.925H614V242.925ZM604 240.925H602V238.925H604V240.925ZM606 238.925H604V236.925H606V238.925ZM608 236.925H606V234.925H608V236.925ZM610 234.925H608V232.925H610V234.925ZM612 230.925H600V228.925H612V230.925ZM628 228.925H616V226.925H628V228.925ZM616 214.925V226.925H614V214.925H616ZM619.667 224.925H617.667V222.925H619.667V224.925ZM621.667 222.925H619.667V220.925H621.667V222.925ZM623.667 220.925H621.667V218.925H623.667V220.925ZM626 218.925H624V216.925H626V218.925Z"/>
+    </IconBase>
+  ),
+);
+
+MinimizeIcon.displayName = 'MinimizeIcon';

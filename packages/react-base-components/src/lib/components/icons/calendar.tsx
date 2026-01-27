@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface CalendarIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const CalendarIcon = React.forwardRef<SVGSVGElement, CalendarIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="198 212.925 32 32" title={title} {...props}>
+      <path d="M225 241.925H203V239.925H225V241.925ZM203 221.925H225V219.925H227V239.925H225V223.925H203V239.925H201V219.925H203V221.925ZM209 235.925H207V233.925H209V235.925ZM215 235.925H213V233.925H215V235.925ZM221 235.925H219V233.925H221V235.925ZM209 229.925H207V227.925H209V229.925ZM215 229.925H213V227.925H215V229.925ZM221 229.925H219V227.925H221V229.925ZM209 217.925H219V214.925H221V217.925H225V219.925H203V217.925H207V214.925H209V217.925Z"/>
+    </IconBase>
+  ),
+);
+
+CalendarIcon.displayName = 'CalendarIcon';

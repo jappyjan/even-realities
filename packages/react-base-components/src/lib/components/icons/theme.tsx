@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface ThemeIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const ThemeIcon = React.forwardRef<SVGSVGElement, ThemeIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="462 212.925 32 32" title={title} {...props}>
+      <path d="M479 241.925H467V239.925H479V241.925ZM467 239.925H465V227.925H467V239.925ZM481 239.925H479V227.925H481V239.925ZM484 236.925H482V234.925H484V236.925ZM486 234.925H484V222.925H486V234.925ZM489 231.925H487V229.925H489V231.925ZM491 229.925H489V217.925H491V229.925ZM479 227.925H467V225.925H479V227.925ZM472 224.925H470V222.925H472V224.925ZM484 222.925H472V220.925H484V222.925ZM477 219.925H475V217.925H477V219.925ZM489 217.925H477V215.925H489V217.925Z"/>
+    </IconBase>
+  ),
+);
+
+ThemeIcon.displayName = 'ThemeIcon';

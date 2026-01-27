@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface ChevronDrillDownIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const ChevronDrillDownIcon = React.forwardRef<SVGSVGElement, ChevronDrillDownIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="466 106.925 32 32" title={title} {...props}>
+      <path d="M483 127.925V129.925H481V127.925H483ZM481 127.925H479V125.925H481V127.925ZM485 127.925H483V125.925H485V127.925ZM479 125.925H477V123.925H479V125.925ZM487 125.925H485V123.925H487V125.925ZM477 123.925H475V121.925H477V123.925ZM489 123.925H487V121.925H489V123.925ZM475 121.925H473V119.925H475V121.925ZM491 121.925H489V119.925H491V121.925ZM473 119.925H471V117.925H473V119.925ZM493 119.925H491V117.925H493V119.925ZM471 117.925H469V115.925H471V117.925ZM495 117.925H493V115.925H495V117.925Z"/>
+    </IconBase>
+  ),
+);
+
+ChevronDrillDownIcon.displayName = 'ChevronDrillDownIcon';

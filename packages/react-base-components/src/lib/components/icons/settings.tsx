@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface SettingsIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const SettingsIcon = React.forwardRef<SVGSVGElement, SettingsIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="333 106.925 32 32" title={title} {...props}>
+      <path d="M358 134.925H354V132.925H358V134.925ZM354 132.925H336V130.925H354V132.925ZM362 132.925H358V130.925H362V132.925ZM358 130.925H354V128.925H358V130.925ZM351 125.925H347V123.925H351V125.925ZM347 123.925H336V121.925H347V123.925ZM362 123.925H351V121.925H362V123.925ZM351 121.925H347V119.925H351V121.925ZM344 116.925H340V114.925H344V116.925ZM340 114.925H336V112.925H340V114.925ZM362 114.925H344V112.925H362V114.925ZM344 112.925H340V110.925H344V112.925Z"/>
+    </IconBase>
+  ),
+);
+
+SettingsIcon.displayName = 'SettingsIcon';

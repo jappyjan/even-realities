@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface UnbindIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const UnbindIcon = React.forwardRef<SVGSVGElement, UnbindIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="334 213.648 32 32" title={title} {...props}>
+      <path d="M352 240.648H350V236.648H339V234.648H350V230.648H339V228.648H350V224.648H339V222.648H350V218.648H352V240.648ZM361 236.648H354V234.648H361V236.648ZM339 234.648H337V232.648H339V234.648ZM363 234.648H361V232.648H363V234.648ZM337 232.648H335V226.648H337V232.648ZM365 232.648H363V226.648H365V232.648ZM361 230.648H355V228.648H361V230.648ZM339 226.648H337V224.648H339V226.648ZM363 226.648H361V224.648H363V226.648ZM361 224.648H354V222.648H361V224.648Z"/>
+    </IconBase>
+  ),
+);
+
+UnbindIcon.displayName = 'UnbindIcon';

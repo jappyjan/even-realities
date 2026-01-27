@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface RestoreIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const RestoreIcon = React.forwardRef<SVGSVGElement, RestoreIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="861 318.925 32 32" title={title} {...props}>
+      <path d="M885 347.925H869V345.925H885V347.925ZM869 345.925H867V343.925H869V345.925ZM887 345.925H885V343.925H887V345.925ZM867 343.925H865V333.925H867V343.925ZM889 343.925H887V329.925H889V343.925ZM875 331.925H873V329.925H875V331.925ZM873 329.925H871V327.925H873V329.925ZM887 329.925H885V327.925H887V329.925ZM871 327.925H869V325.925H871V327.925ZM885 327.925H873V325.925H885V327.925ZM873 325.925H871V323.925H873V325.925ZM875 323.925H873V321.925H875V323.925Z"/>
+    </IconBase>
+  ),
+);
+
+RestoreIcon.displayName = 'RestoreIcon';

@@ -14,7 +14,9 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": { "targetName": "typecheck" },
+        "typecheck": {
+          "targetName": "typecheck"
+        },
         "build": {
           "targetName": "build",
           "configName": "tsconfig.lib.json",
@@ -36,13 +38,36 @@
         "watchDepsTargetName": "watch-deps"
       }
     },
-    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
-    { "plugin": "@nx/vitest", "options": { "testTargetName": "test" } }
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test"
+      }
+    }
   ],
   "release": {
-    "projects": ["!utils", "!@org/source"],
-    "version": { "preVersionCommand": "npx nx run-many -t build" }
+    "projects": ["!utils", "!@jappyjan/even-realities"],
+    "version": {
+      "preVersionCommand": "npx nx run-many -t build"
+    }
   },
-  "targetDefaults": { "test": { "dependsOn": ["^build"] } },
-  "nxCloudId": "6977a56264105c81355d51e6"
+  "targetDefaults": {
+    "test": {
+      "dependsOn": ["^build"]
+    }
+  },
+  "nxCloudId": "6977a56264105c81355d51e6",
+  "generators": {
+    "@nx/react": {
+      "library": {
+        "unitTestRunner": "vitest"
+      }
+    }
+  }
 }

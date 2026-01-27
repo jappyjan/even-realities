@@ -1,0 +1,15 @@
+import * as React from 'react';
+
+import { IconBase, IconBaseProps } from './icon-base';
+
+export interface MaximizeIconProps extends Omit<IconBaseProps, 'viewBox'> {}
+
+export const MaximizeIcon = React.forwardRef<SVGSVGElement, MaximizeIconProps>(
+  ({ title, ...props }, ref) => (
+    <IconBase ref={ref} viewBox="466 212.925 32 32" title={title} {...props}>
+      <path d="M482 242.925H470V240.925H482V242.925ZM470 240.925H468V228.925H470V240.925ZM474 238.925H472V236.925H474V238.925ZM476 236.925H474V234.925H476V236.925ZM478 234.925H476V232.925H478V234.925ZM480 232.925H478V230.925H480V232.925ZM496 216.925V228.925H494V216.925H496ZM486 226.925H484V224.925H486V226.925ZM488.333 224.925H486.333V222.925H488.333V224.925ZM490.333 222.925H488.333V220.925H490.333V222.925ZM492.333 220.925H490.333V218.925H492.333V220.925ZM494 216.925H482V214.925H494V216.925Z"/>
+    </IconBase>
+  ),
+);
+
+MaximizeIcon.displayName = 'MaximizeIcon';
