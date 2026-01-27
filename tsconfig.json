@@ -4,7 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/react-base-components"
+      "path": "./packages/even-realities-ui"
     }
   ]
 }

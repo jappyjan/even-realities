@@ -2,10 +2,7 @@
   "name": "@jappyjan/even-realities",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {
-    "storybook": "storybook dev -p 6006 -c packages/react-base-components/.storybook",
-    "build-storybook": "storybook build -c packages/react-base-components/.storybook"
-  },
+  "scripts": {},
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.14.5",

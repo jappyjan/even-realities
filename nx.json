@@ -52,7 +52,7 @@
     }
   ],
   "release": {
-    "projects": ["!utils", "!@jappyjan/even-realities"],
+    "projects": ["even-realities-ui"],
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
     }
@@ -62,7 +62,6 @@
       "dependsOn": ["^build"]
     }
   },
-  "nxCloudId": "6977a56264105c81355d51e6",
   "generators": {
     "@nx/react": {
       "library": {
