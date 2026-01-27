@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface ChevronSmallDrillUpIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type ChevronSmallDrillUpIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const ChevronSmallDrillUpIcon = React.forwardRef<SVGSVGElement, ChevronSmallDrillUpIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="334 106.925 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface HomePageOnIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type HomePageOnIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const HomePageOnIcon = React.forwardRef<SVGSVGElement, HomePageOnIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="334 106.925 32 32" title={title} {...props}>

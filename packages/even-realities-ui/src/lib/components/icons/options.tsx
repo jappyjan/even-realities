@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface OptionsIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type OptionsIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const OptionsIcon = React.forwardRef<SVGSVGElement, OptionsIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="597 424.925 32 32" title={title} {...props}>

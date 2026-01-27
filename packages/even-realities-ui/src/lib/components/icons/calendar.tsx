@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface CalendarIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type CalendarIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const CalendarIcon = React.forwardRef<SVGSVGElement, CalendarIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="198 212.925 32 32" title={title} {...props}>

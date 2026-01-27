@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface PinIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type PinIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const PinIcon = React.forwardRef<SVGSVGElement, PinIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="201 318.925 32 32" title={title} {...props}>

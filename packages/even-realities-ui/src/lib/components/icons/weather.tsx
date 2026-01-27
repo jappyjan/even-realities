@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface WeatherIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type WeatherIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const WeatherIcon = React.forwardRef<SVGSVGElement, WeatherIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="594 212.925 32 32" title={title} {...props}>

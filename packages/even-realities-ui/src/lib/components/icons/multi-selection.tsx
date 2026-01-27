@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface MultiSelectionIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type MultiSelectionIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const MultiSelectionIcon = React.forwardRef<SVGSVGElement, MultiSelectionIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="465 424.925 32 32" title={title} {...props}>

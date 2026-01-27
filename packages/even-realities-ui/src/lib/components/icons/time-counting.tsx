@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface TimeCountingIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type TimeCountingIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const TimeCountingIcon = React.forwardRef<SVGSVGElement, TimeCountingIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="330 212.925 32 32" title={title} {...props}>

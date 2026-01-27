@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface CaseChargingIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type CaseChargingIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const CaseChargingIcon = React.forwardRef<SVGSVGElement, CaseChargingIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="862 107.648 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface QuickNoteIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type QuickNoteIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const QuickNoteIcon = React.forwardRef<SVGSVGElement, QuickNoteIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="858 106.925 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface HeadUpAngleIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type HeadUpAngleIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const HeadUpAngleIcon = React.forwardRef<SVGSVGElement, HeadUpAngleIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="462 318.925 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface MaximizeIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type MaximizeIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const MaximizeIcon = React.forwardRef<SVGSVGElement, MaximizeIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="466 212.925 32 32" title={title} {...props}>

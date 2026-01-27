@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface PhoneCallIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type PhoneCallIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const PhoneCallIcon = React.forwardRef<SVGSVGElement, PhoneCallIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="1122 318.925 32 32" title={title} {...props}>

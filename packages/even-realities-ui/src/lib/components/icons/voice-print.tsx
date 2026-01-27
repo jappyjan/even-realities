@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface VoicePrintIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type VoicePrintIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const VoicePrintIcon = React.forwardRef<SVGSVGElement, VoicePrintIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="330 318.925 32 32" title={title} {...props}>

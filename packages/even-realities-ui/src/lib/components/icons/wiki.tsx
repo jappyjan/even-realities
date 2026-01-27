@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface WikiIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type WikiIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const WikiIcon = React.forwardRef<SVGSVGElement, WikiIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="726 212.925 32 32" title={title} {...props}>

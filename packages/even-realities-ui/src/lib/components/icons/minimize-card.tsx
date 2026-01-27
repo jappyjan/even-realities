@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface MinimizeCardIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type MinimizeCardIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const MinimizeCardIcon = React.forwardRef<SVGSVGElement, MinimizeCardIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="862 212.925 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface NetworkErrorIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type NetworkErrorIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const NetworkErrorIcon = React.forwardRef<SVGSVGElement, NetworkErrorIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="862 743.648 32 32" title={title} {...props}>

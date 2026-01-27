@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface WearDetectIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type WearDetectIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const WearDetectIcon = React.forwardRef<SVGSVGElement, WearDetectIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="990 212.925 32 32" title={title} {...props}>

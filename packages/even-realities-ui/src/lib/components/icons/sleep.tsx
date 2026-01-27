@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface SleepIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type SleepIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const SleepIcon = React.forwardRef<SVGSVGElement, SleepIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="1126 106.833 32 32" title={title} {...props}>

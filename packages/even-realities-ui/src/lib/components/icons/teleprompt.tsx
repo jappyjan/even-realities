@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface TelepromptIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type TelepromptIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const TelepromptIcon = React.forwardRef<SVGSVGElement, TelepromptIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="330 106.925 32 32" title={title} {...props}>

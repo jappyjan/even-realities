@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface BluetoothIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type BluetoothIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const BluetoothIcon = React.forwardRef<SVGSVGElement, BluetoothIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="466 213.648 32 32" title={title} {...props}>

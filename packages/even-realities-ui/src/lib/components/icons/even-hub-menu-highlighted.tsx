@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface EvenHubMenuHighlightedIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type EvenHubMenuHighlightedIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const EvenHubMenuHighlightedIcon = React.forwardRef<SVGSVGElement, EvenHubMenuHighlightedIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="862 106.925 32 32" title={title} {...props}>

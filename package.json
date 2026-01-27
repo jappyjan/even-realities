@@ -2,7 +2,10 @@
   "name": "@jappyjan/even-realities",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky",
+    "precommit": "npx nx run-many -t lint test build"
+  },
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.14.5",
@@ -42,6 +45,7 @@
     "eslint-plugin-jsx-a11y": "6.10.1",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
+    "husky": "^9.1.7",
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "jsonc-eslint-parser": "^2.1.0",

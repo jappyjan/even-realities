@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface LogOutIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type LogOutIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const LogOutIcon = React.forwardRef<SVGSVGElement, LogOutIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="862 743.648 32 32" title={title} {...props}>

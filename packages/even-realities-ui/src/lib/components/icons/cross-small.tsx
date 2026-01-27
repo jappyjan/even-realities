@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface CrossSmallIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type CrossSmallIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const CrossSmallIcon = React.forwardRef<SVGSVGElement, CrossSmallIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="861 212.925 32 32" title={title} {...props}>

@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { IconBase, IconBaseProps } from './icon-base';
 
-export interface BrightnessAutoIconProps extends Omit<IconBaseProps, 'viewBox'> {}
-
+export type BrightnessAutoIconProps = Omit<IconBaseProps, 'viewBox'>;
 export const BrightnessAutoIcon = React.forwardRef<SVGSVGElement, BrightnessAutoIconProps>(
   ({ title, ...props }, ref) => (
     <IconBase ref={ref} viewBox="1126 107.648 32 32" title={title} {...props}>
