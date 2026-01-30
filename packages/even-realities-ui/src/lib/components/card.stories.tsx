@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Card, CardContent, CardFooter, CardHeader } from './card';
 import { Button } from './button';

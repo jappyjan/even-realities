@@ -1,31 +1,35 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
-import path from 'node:path';
+const path = require("node:path");
 
-const config: StorybookConfig = {
-  stories: ['../src/lib/**/*.stories.@(ts|tsx)', '../src/lib/**/*.mdx'],
+const getAbsolutePath = (value) =>
+  path.dirname(require.resolve(`${value}/package.json`));
+
+/** @type {import('@storybook/react-webpack5').StorybookConfig} */
+const config = {
+  stories: ["../src/lib/**/*.stories.@(ts|tsx)", "../src/lib/**/*.mdx"],
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-a11y',
-    '@storybook/addon-docs',
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-docs"),
   ],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
+  },
+  docs: {
+    autodocs: true,
   },
   webpackFinal: async (config) => {
     if (!config.module) return config;
     config.module.rules = config.module.rules ?? [];
-    const libraryPath = path.resolve(__dirname, '../src/lib');
+    const libraryPath = path.resolve(__dirname, "../src/lib");
     const cssRule = {
       test: /\.css$/,
       use: [
-        require.resolve('style-loader'),
+        require.resolve("style-loader"),
         {
-          loader: require.resolve('css-loader'),
+          loader: require.resolve("css-loader"),
           options: { importLoaders: 1 },
         },
-        require.resolve('postcss-loader'),
+        require.resolve("postcss-loader"),
       ],
       include: [libraryPath],
     };
@@ -34,21 +38,21 @@ const config: StorybookConfig = {
       exclude: /node_modules/,
       use: [
         {
-          loader: require.resolve('babel-loader'),
+          loader: require.resolve("babel-loader"),
           options: {
             babelrc: false,
             configFile: false,
             presets: [
-              require.resolve('@nx/react/babel'),
-              require.resolve('@babel/preset-typescript'),
+              require.resolve("@nx/react/babel"),
+              require.resolve("@babel/preset-typescript"),
             ],
           },
         },
       ],
     });
     const oneOfRule = config.module.rules.find(
-      (rule) => typeof rule === 'object' && Array.isArray(rule.oneOf)
-    ) as { oneOf?: unknown[] } | undefined;
+      (rule) => typeof rule === "object" && Array.isArray(rule.oneOf)
+    );
 
     if (oneOfRule?.oneOf) {
       oneOfRule.oneOf.unshift(cssRule);
@@ -57,9 +61,9 @@ const config: StorybookConfig = {
     config.module.rules = config.module.rules.map((rule) => {
       if (rule === cssRule) return rule;
       if (
-        typeof rule === 'object' &&
+        typeof rule === "object" &&
         rule?.test instanceof RegExp &&
-        rule.test.test('.css')
+        rule.test.test(".css")
       ) {
         const existingExclude = Array.isArray(rule.exclude)
           ? rule.exclude
@@ -77,4 +81,4 @@ const config: StorybookConfig = {
   },
 };
 
-export default config;
+module.exports = config;

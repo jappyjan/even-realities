@@ -6,6 +6,12 @@ const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on.*' },
     controls: { expanded: true },
+    docs: {
+      source: {
+        type: 'dynamic',
+        state: 'open',
+      },
+    },
     layout: 'centered',
   },
 };
