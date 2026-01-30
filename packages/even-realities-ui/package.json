@@ -1,6 +1,6 @@
 {
   "name": "@jappyjan/even-realities-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -27,6 +27,12 @@
       "import": "./dist/tokens/index.js",
       "default": "./dist/tokens/index.js"
     }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "react": "^19.0.0",
