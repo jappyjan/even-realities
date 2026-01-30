@@ -17,7 +17,7 @@ import { IconBase } from '@jappyjan/even-realities-ui/icons';
 Make sure to load the base styles once in your app (tokens, typography, utilities):
 
 ```tsx
-import '@jappyjan/even-realities-ui/styles';
+import '@jappyjan/even-realities-ui/styles.css';
 ```
 
 ## Entry points

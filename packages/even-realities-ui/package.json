@@ -13,9 +13,13 @@
       "default": "./dist/index.js"
     },
     "./styles": {
-      "types": "./dist/styles.d.ts",
-      "import": "./dist/styles.js",
-      "default": "./dist/styles.js"
+      "default": "./dist/even-realities-ui.css"
+    },
+    "./styles.css": {
+      "default": "./dist/even-realities-ui.css"
+    },
+    "./even-realities-ui.css": {
+      "default": "./dist/even-realities-ui.css"
     },
     "./components": {
       "types": "./dist/components/index.d.ts",

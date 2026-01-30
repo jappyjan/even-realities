@@ -52,7 +52,7 @@
     }
   ],
   "release": {
-    "projects": ["even-realities-ui"],
+    "projects": ["@jappyjan/even-realities-ui"],
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
     }
