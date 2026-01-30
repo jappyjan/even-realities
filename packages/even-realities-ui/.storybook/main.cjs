@@ -5,7 +5,7 @@ const getAbsolutePath = (value) =>
 
 /** @type {import('@storybook/react-webpack5').StorybookConfig} */
 const config = {
-  stories: ["../src/lib/**/*.stories.@(ts|tsx)", "../src/lib/**/*.mdx"],
+  stories: ["../src/lib/**/*.stories.@(ts|tsx)"],
   addons: [
     getAbsolutePath("@storybook/addon-a11y"),
     getAbsolutePath("@storybook/addon-docs"),
@@ -13,9 +13,6 @@ const config = {
   framework: {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
-  },
-  docs: {
-    autodocs: true,
   },
   webpackFinal: async (config) => {
     if (!config.module) return config;
