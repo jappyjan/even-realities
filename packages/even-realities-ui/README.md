@@ -14,6 +14,12 @@ import { Button } from '@jappyjan/even-realities-ui';
 import { IconBase } from '@jappyjan/even-realities-ui/icons';
 ```
 
+Make sure to load the base styles once in your app (tokens, typography, utilities):
+
+```tsx
+import '@jappyjan/even-realities-ui/styles';
+```
+
 ## Entry points
 
 - `@jappyjan/even-realities-ui` (recommended default)

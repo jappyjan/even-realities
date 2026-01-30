@@ -30,6 +30,7 @@ export default defineConfig(() => ({
     lib: {
       entry: {
         index: 'src/index.ts',
+        styles: 'src/styles.ts',
         'components/index': 'src/components/index.ts',
         'icons/index': 'src/icons/index.ts',
         'tokens/index': 'src/tokens/index.ts',
