@@ -1,3 +1,17 @@
+## 0.0.3 (2026-01-30)
+
+### 🚀 Features
+
+- storyblok now shows code examples ([466308a](https://github.com/jappyjan/even-realities/commit/466308a))
+
+### 🩹 Fixes
+
+- export styles ([895799e](https://github.com/jappyjan/even-realities/commit/895799e))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.2 (2026-01-30)
 
 ### 🚀 Features
