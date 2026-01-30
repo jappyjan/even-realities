@@ -1,3 +1,13 @@
+## 0.0.4 (2026-01-30)
+
+### 🩹 Fixes
+
+- export styles ([930593f](https://github.com/jappyjan/even-realities/commit/930593f))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.3 (2026-01-30)
 
 ### 🚀 Features
