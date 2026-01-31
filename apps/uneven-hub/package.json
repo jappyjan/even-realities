@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@jappyjan/even-realities-ui": "workspace:*",
+    "@jappyjan/even-realities-ui": "file:*",
     "@supabase/supabase-js": "^2.93.3",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
