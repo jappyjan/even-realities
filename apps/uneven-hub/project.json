@@ -1,0 +1,15 @@
+{
+  "name": "uneven-hub",
+  "projectType": "application",
+  "sourceRoot": "apps/uneven-hub/src",
+  "targets": {
+    "supabase-push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/uneven-hub",
+        "envFile": ".env",
+        "command": "supabase db push --db-url $SUPABASE_DB_URL"
+      }
+    }
+  }
+}
