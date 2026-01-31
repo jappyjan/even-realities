@@ -1,3 +1,17 @@
+## 0.0.5 (2026-01-31)
+
+### 🚀 Features
+
+- enhance Tailwind configuration and add PostCSS support ([96bb17e](https://github.com/jappyjan/even-realities/commit/96bb17e))
+
+### 🩹 Fixes
+
+- storyblok ([a291d9f](https://github.com/jappyjan/even-realities/commit/a291d9f))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.4 (2026-01-30)
 
 ### 🩹 Fixes
