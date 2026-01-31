@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '../utils/cn';
+import { clsx } from 'clsx';
 
 type TextVariant =
   | 'title-xl'
@@ -38,7 +38,7 @@ export const Text = <T extends React.ElementType = 'span'>({
 
   return (
     <Component
-      className={cn(variantClasses[variant], 'text-tc-1', className)}
+      className={clsx(variantClasses[variant], 'text-tc-1', className)}
       {...props}
     />
   );

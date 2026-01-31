@@ -18,6 +18,7 @@ const config = {
     if (!config.module) return config;
     config.module.rules = config.module.rules ?? [];
     const libraryPath = path.resolve(__dirname, "../src/lib");
+    const postcssConfigPath = path.resolve(__dirname, "../postcss.config.cjs");
     const cssRule = {
       test: /\.css$/,
       use: [
@@ -26,7 +27,14 @@ const config = {
           loader: require.resolve("css-loader"),
           options: { importLoaders: 1 },
         },
-        require.resolve("postcss-loader"),
+        {
+          loader: require.resolve("postcss-loader"),
+          options: {
+            postcssOptions: {
+              config: postcssConfigPath,
+            },
+          },
+        },
       ],
       include: [libraryPath],
     };

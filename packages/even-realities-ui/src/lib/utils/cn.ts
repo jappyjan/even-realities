@@ -19,15 +19,15 @@ const twMerge = extendTailwindMerge({
     ],
     'text-color': [
       {
-        text: [
-          'tc-highlight',
-          'tc-highlight-pressed',
-          'tc-red',
-          'tc-red-muted',
-          'tc-green',
-          'tc-1',
-          'tc-2',
-          'tc-accent',
+        'text-tc': [
+          'highlight',
+          'highlight-pressed',
+          'red',
+          'red-muted',
+          'green',
+          '1',
+          '2',
+          'accent',
         ],
       },
     ],

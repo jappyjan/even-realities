@@ -57,6 +57,10 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-family-sans)'],
       },
+      fontWeight: {
+        light: 'var(--font-weight-light)',
+        regular: 'var(--font-weight-regular)',
+      },
       fontSize: {
         'app-title-xl': [
           'var(--font-size-app-title-xl)',
@@ -144,6 +148,10 @@ module.exports = {
         24: 'var(--space-24)',
         28: 'var(--space-28)',
         32: 'var(--space-32)',
+        'layout-section': 'var(--layout-section-gap)',
+      },
+      letterSpacing: {
+        tight: 'var(--letter-spacing-tight)',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

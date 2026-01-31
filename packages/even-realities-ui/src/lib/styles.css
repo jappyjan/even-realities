@@ -68,14 +68,14 @@
     --space-28: 28px;
     --space-32: 32px;
 
-    --layout-page-padding: 120px;
-    --layout-section-gap: 80px;
+    --layout-page-padding: 12px;
+    --layout-section-gap: 8px;
     --layout-card-margin: 16px;
 
     --border-width-1: 1px;
     --border-width-2: 2px;
     --radius-sm: 6px;
-    --radius-md: 12px;
+    --radius-md: 6px;
 
     --shadow-1: none;
     --shadow-2: none;
@@ -84,6 +84,7 @@
   body {
     font-family: var(--font-family-sans);
     background-color: var(--color-bc-3);
+    padding: var(--layout-page-padding);
   }
 }
 
