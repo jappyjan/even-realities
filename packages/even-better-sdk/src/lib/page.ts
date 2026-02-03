@@ -7,6 +7,7 @@ export class EvenBetterPage {
     public readonly id: string;
     private elements: Map<number, EvenBetterElement> = new Map();
     private eventCaptureElementId: number | null = null;
+    private eventCaptureDirty = false;
 
     constructor(public readonly sdk: EvenBetterSdk) {
         this.id = nanoid();
@@ -43,10 +44,26 @@ export class EvenBetterPage {
     }
 
     public setEventCaptureElement(element: EvenBetterElement): void {
+        if (this.eventCaptureElementId === element.id) {
+            EvenBetterSdk.logger.debug(
+                `[Page] Event capture element "${element.id}" already set for page "${this.id}".`,
+            );
+            return;
+        }
+
         EvenBetterSdk.logger.info(
             `[Page] Setting event capture element "${element.id}" for page "${this.id}".`,
         );
         this.eventCaptureElementId = element.id;
+        this.eventCaptureDirty = true;
+    }
+
+    public get isEventCaptureDirty(): boolean {
+        return this.eventCaptureDirty;
+    }
+
+    public clearEventCaptureDirty(): void {
+        this.eventCaptureDirty = false;
     }
 
     public addTextElement(content: string): EvenBetterTextElement {

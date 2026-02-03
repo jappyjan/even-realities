@@ -11,8 +11,13 @@ type SharedSdkState = {
   bridge: EvenAppBridge | null;
   initializationPromise: Promise<void> | null;
   currentPageId: string | null;
+  hasCreatedStartupContainer: boolean;
   eventListeners: EventListener[];
-  renderRequests: Array<{ page: EvenBetterPage; resolve: () => void }>;
+  renderRequests: Array<{
+    page: EvenBetterPage;
+    resolve: () => void;
+    reject: (error: unknown) => void;
+  }>;
   renderInProgress: boolean;
 };
 
@@ -26,6 +31,7 @@ const getSharedState = (): SharedSdkState => {
       bridge: null,
       initializationPromise: null,
       currentPageId: null,
+      hasCreatedStartupContainer: false,
       eventListeners: [],
       renderRequests: [],
       renderInProgress: false,
@@ -53,10 +59,20 @@ export class EvenBetterSdk {
   private static set currentPageId(id: string | null) {
     EvenBetterSdk.state.currentPageId = id;
   }
+  private static get hasCreatedStartupContainer(): boolean {
+    return EvenBetterSdk.state.hasCreatedStartupContainer;
+  }
+  private static set hasCreatedStartupContainer(value: boolean) {
+    EvenBetterSdk.state.hasCreatedStartupContainer = value;
+  }
   private static get eventListeners(): EventListener[] {
     return EvenBetterSdk.state.eventListeners;
   }
-  private static get renderRequests(): Array<{ page: EvenBetterPage; resolve: () => void }> {
+  private static get renderRequests(): Array<{
+    page: EvenBetterPage;
+    resolve: () => void;
+    reject: (error: unknown) => void;
+  }> {
     return EvenBetterSdk.state.renderRequests;
   }
   private static get renderInProgress(): boolean {
@@ -151,9 +167,13 @@ export class EvenBetterSdk {
   }
 
   public async renderPage(page: EvenBetterPage): Promise<void> {
-    const promise = new Promise<void>((resolve) => {
-      EvenBetterSdk.renderRequests.push({ page, resolve });
+    const promise = new Promise<void>((resolve, reject) => {
+      EvenBetterSdk.renderRequests.push({ page, resolve, reject });
     });
+
+    EvenBetterSdk.logger.debug(
+      `[SDK] Render request queued for page "${page.id}" (queue size: ${EvenBetterSdk.renderRequests.length}).`,
+    );
 
     EvenBetterSdk.processRenderRequests();
 
@@ -165,16 +185,17 @@ export class EvenBetterSdk {
       return;
     }
 
-    EvenBetterSdk.renderInProgress = true;
-
     const request = EvenBetterSdk.renderRequests.shift();
     if (!request) {
       return;
     }
 
+    EvenBetterSdk.renderInProgress = true;
+
     this.logger.debug(`[SDK] Processing render request for page "${request.page.id}".`);
 
-    const { page, resolve } = request;
+    const { page, resolve, reject } = request;
+    let renderError: unknown = null;
     try {
       EvenBetterSdk.logger.debug(`[SDK] Rendering page "${page.id}".`);
       await EvenBetterSdk.initialize();
@@ -182,30 +203,57 @@ export class EvenBetterSdk {
       const pageElements = page.getElements();
       EvenBetterSdk.logger.debug(`[SDK] Page "${page.id}" has ${pageElements.length} elements.`);
 
-      const partialUpdateElements = pageElements.filter((element) => {
-        if (!element.didChange) {
-          return false;
-        }
-
-        return element instanceof EvenBetterElementWithPartialUpdate;
-      }) as EvenBetterElementWithPartialUpdate[];
-
+      const changedElements = pageElements.filter((element) => element.didChange);
+      const eventCaptureChanged = page.isEventCaptureDirty;
       const isSamePage = EvenBetterSdk.currentPageId === page.id;
-      const requiresFullPageRender = partialUpdateElements.length !== pageElements.length || !isSamePage;
+      const hasStartupContainer = EvenBetterSdk.hasCreatedStartupContainer;
+
+      EvenBetterSdk.logger.debug(
+        `[SDK] Page "${page.id}" changed elements: ${changedElements.length}. Event capture changed: ${eventCaptureChanged}.`,
+      );
+
+      if (changedElements.length === 0 && !eventCaptureChanged && isSamePage && hasStartupContainer) {
+        EvenBetterSdk.logger.debug(`[SDK] Page "${page.id}" has no changes. Skipping render.`);
+        return;
+      }
+
+      const partialUpdateElements = changedElements.filter(
+        (element): element is EvenBetterElementWithPartialUpdate =>
+          element instanceof EvenBetterElementWithPartialUpdate && element.canPartialUpdate,
+      );
+
+      const requiresFullPageRender = !hasStartupContainer || !isSamePage || eventCaptureChanged
+        || changedElements.some(
+          (element) => !(element instanceof EvenBetterElementWithPartialUpdate)
+            || !element.canPartialUpdate,
+        );
+
       EvenBetterSdk.logger.debug(
         `[SDK] Page "${page.id}" requires full render: ${requiresFullPageRender} (Same page: ${isSamePage}).`,
       );
 
       if (requiresFullPageRender) {
-        if (!isSamePage) {
+        if (!hasStartupContainer) {
           EvenBetterSdk.logger.info(`[SDK] Creating startup page container for "${page.id}".`);
-          await EvenBetterSdk.bridge!.createStartUpPageContainer(page.toEvenSdkPage());
+          const result = await EvenBetterSdk.bridge!.createStartUpPageContainer(page.toEvenSdkPage());
+          const isCreateSuccess = result === 0 || result === true;
+          if (!isCreateSuccess) {
+            throw new Error(`Startup page container creation failed with code ${String(result)}.`);
+          }
+          EvenBetterSdk.hasCreatedStartupContainer = true;
         } else {
           EvenBetterSdk.logger.info(`[SDK] Rebuilding page container for "${page.id}".`);
-          await EvenBetterSdk.bridge!.rebuildPageContainer(RebuildPageContainer.fromJson(page.toEvenSdkPage()));
+          const success = await EvenBetterSdk.bridge!.rebuildPageContainer(
+            RebuildPageContainer.fromJson(page.toEvenSdkPage()),
+          );
+          if (success === false) {
+            throw new Error('Page container rebuild failed.');
+          }
         }
 
         EvenBetterSdk.currentPageId = page.id;
+        await Promise.all(pageElements.map((element) => element.afterRender()));
+        page.clearEventCaptureDirty();
         EvenBetterSdk.logger.debug(`[SDK] Page "${page.id}" render complete with full rebuild.`);
         return;
       }
@@ -215,15 +263,32 @@ export class EvenBetterSdk {
         try {
           const result = await element.updateWithEvenHubSdk();
           EvenBetterSdk.logger.debug(`[SDK] Element "${element.id}" update result: ${result}.`);
+          if (result === false) {
+            EvenBetterSdk.logger.warn(
+              `[SDK] Element "${element.id}" partial update returned false; keeping element dirty.`,
+            );
+          } else {
+            await element.afterRender();
+          }
         } catch (error) {
-          EvenBetterSdk.logger.error(`[SDK] Element "${element.id}" partial update failed.`);
+          EvenBetterSdk.logger.error(
+            `[SDK] Element "${element.id}" partial update failed: ${String(error)}.`,
+          );
           throw error;
         }
       }
 
+      page.clearEventCaptureDirty();
       EvenBetterSdk.logger.debug(`[SDK] Page "${page.id}" render complete with partial updates.`);
+    } catch (error) {
+      renderError = error;
+      EvenBetterSdk.logger.error(`[SDK] Render failed for page "${page.id}": ${String(error)}.`);
     } finally {
-      resolve();
+      if (renderError) {
+        reject(renderError);
+      } else {
+        resolve();
+      }
 
       setTimeout(() => {
         EvenBetterSdk.renderInProgress = false;
@@ -239,6 +304,12 @@ export class EvenBetterSdk {
 
   public removeEventListener(listener: EventListener): void {
     EvenBetterSdk.logger.debug('[SDK] Removing Even hub event listener.');
-    EvenBetterSdk.eventListeners.splice(EvenBetterSdk.eventListeners.indexOf(listener), 1);
+    const index = EvenBetterSdk.eventListeners.indexOf(listener);
+    if (index < 0) {
+      EvenBetterSdk.logger.warn('[SDK] Tried to remove unknown Even hub event listener.');
+      return;
+    }
+
+    EvenBetterSdk.eventListeners.splice(index, 1);
   }
 }
