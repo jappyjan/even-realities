@@ -1,3 +1,20 @@
+## 0.0.6 (2026-02-03)
+
+### 🚀 Features
+
+- uneven hub ([6eef180](https://github.com/jappyjan/even-realities/commit/6eef180))
+- even better sdk ([5f69734](https://github.com/jappyjan/even-realities/commit/5f69734))
+- even better sdk readme ([98dcc69](https://github.com/jappyjan/even-realities/commit/98dcc69))
+
+### 🩹 Fixes
+
+- npm workspace ([9de0930](https://github.com/jappyjan/even-realities/commit/9de0930))
+- storybook gh pages dist dir ([dcfde60](https://github.com/jappyjan/even-realities/commit/dcfde60))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.5 (2026-01-31)
 
 ### 🚀 Features
