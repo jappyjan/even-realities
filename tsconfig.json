@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/uneven-hub"
+    },
+    {
+      "path": "./packages/even-better-sdk"
     }
   ]
 }
