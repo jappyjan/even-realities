@@ -16,18 +16,36 @@ export enum EvenBetterElementType {
     TEXT = 'text',
 }
 
+const areStringArraysEqual = (left: string[], right: string[]): boolean => {
+    if (left.length !== right.length) {
+        return false;
+    }
+
+    return left.every((value, index) => value === right[index]);
+};
+
 export class EvenBetterElementPosition {
     constructor(private positionX: number, private positionY: number) {
         return this;
     }
 
     public setX(x: number): EvenBetterElementPosition {
+        if (this.positionX === x) {
+            EvenBetterSdk.logger.debug(`[Element] Element position X unchanged (${x}).`);
+            return this;
+        }
+
         this.positionX = x;
         EvenBetterSdk.logger.debug(`[Element] Element position X set to ${x}.`);
         return this;
     }
 
     public setY(y: number): EvenBetterElementPosition {
+        if (this.positionY === y) {
+            EvenBetterSdk.logger.debug(`[Element] Element position Y unchanged (${y}).`);
+            return this;
+        }
+
         this.positionY = y;
         EvenBetterSdk.logger.debug(`[Element] Element position Y set to ${y}.`);
         return this;
@@ -51,28 +69,40 @@ export class EvenBetterElementSize {
     }
 
     public setWidth(width: number): EvenBetterElementSize {
-        if (width > EvenBetterElementSize.MAX_WIDTH) {
-            width = EvenBetterElementSize.MAX_WIDTH;
+        let nextWidth = width;
+        if (nextWidth > EvenBetterElementSize.MAX_WIDTH) {
+            nextWidth = EvenBetterElementSize.MAX_WIDTH;
             EvenBetterSdk.logger.warn(
                 `[Element] Width is too large, clamped to ${EvenBetterElementSize.MAX_WIDTH}.`,
             );
         }
 
-        this.sizeWidth = width;
-        EvenBetterSdk.logger.debug(`[Element] Element width set to ${width}.`);
+        if (this.sizeWidth === nextWidth) {
+            EvenBetterSdk.logger.debug(`[Element] Element width unchanged (${nextWidth}).`);
+            return this;
+        }
+
+        this.sizeWidth = nextWidth;
+        EvenBetterSdk.logger.debug(`[Element] Element width set to ${nextWidth}.`);
         return this;
     }
 
     public setHeight(height: number): EvenBetterElementSize {
-        if (height > EvenBetterElementSize.MAX_HEIGHT) {
-            height = EvenBetterElementSize.MAX_HEIGHT;
+        let nextHeight = height;
+        if (nextHeight > EvenBetterElementSize.MAX_HEIGHT) {
+            nextHeight = EvenBetterElementSize.MAX_HEIGHT;
             EvenBetterSdk.logger.warn(
                 `[Element] Height is too large, clamped to ${EvenBetterElementSize.MAX_HEIGHT}.`,
             );
         }
 
-        this.sizeHeight = height;
-        EvenBetterSdk.logger.debug(`[Element] Element height set to ${height}.`);
+        if (this.sizeHeight === nextHeight) {
+            EvenBetterSdk.logger.debug(`[Element] Element height unchanged (${nextHeight}).`);
+            return this;
+        }
+
+        this.sizeHeight = nextHeight;
+        EvenBetterSdk.logger.debug(`[Element] Element height set to ${nextHeight}.`);
         return this;
     }
 
@@ -126,9 +156,23 @@ export abstract class EvenBetterElement {
     private readonly containerID = EvenBetterElement.elementIdCounter++;
     protected position: EvenBetterElementPosition = new EvenBetterElementPosition(0, 0);
     protected size: EvenBetterElementSize = new EvenBetterElementSize(100, 100);
+    protected isDirty = true;
 
-    public abstract get didChange(): boolean;
+    public get didChange(): boolean {
+        return this.isDirty;
+    }
+
+    protected markDirty(): void {
+        this.isDirty = true;
+    }
+
+    protected markLayoutDirty(): void {
+        this.markDirty();
+    }
+
     public afterRender(): Promise<void> {
+        this.isDirty = false;
+        EvenBetterSdk.logger.debug(`[Element] Element "${this.containerID}" marked clean after render.`);
         return Promise.resolve();
     }
 
@@ -166,19 +210,36 @@ export abstract class EvenBetterElement {
     }
 
     public setPosition(setter: (position: EvenBetterElementPosition) => void): EvenBetterElement {
+        const previousX = this.position.x;
+        const previousY = this.position.y;
         setter(this.position);
+        if (previousX === this.position.x && previousY === this.position.y) {
+            EvenBetterSdk.logger.debug(`[Element] Element "${this.containerID}" position unchanged.`);
+            return this;
+        }
+
+        this.markLayoutDirty();
         EvenBetterSdk.logger.debug(`[Element] Element "${this.containerID}" position updated.`);
         return this;
     }
 
     public setSize(setter: (size: EvenBetterElementSize) => void): EvenBetterElement {
+        const previousWidth = this.size.width;
+        const previousHeight = this.size.height;
         setter(this.size);
+        if (previousWidth === this.size.width && previousHeight === this.size.height) {
+            EvenBetterSdk.logger.debug(`[Element] Element "${this.containerID}" size unchanged.`);
+            return this;
+        }
+
+        this.markLayoutDirty();
         EvenBetterSdk.logger.debug(`[Element] Element "${this.containerID}" size updated.`);
         return this;
     }
 }
 
 export abstract class EvenBetterElementWithPartialUpdate extends EvenBetterElement {
+    public abstract get canPartialUpdate(): boolean;
     public abstract updateWithEvenHubSdk(): Promise<boolean>;
 }
 
@@ -193,38 +254,46 @@ export class EvenBetterListElement extends EvenBetterElement {
         items: string[],
     ) {
         super(page, EvenBetterElementType.LIST);
-        this.items = items;
+        this.items = [...items];
         return this;
     }
 
-    private isDirty = true;
-
     public override async afterRender(): Promise<void> {
-        this.isDirty = false;
+        await super.afterRender();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" rendered.`);
-    }
-
-    public override get didChange(): boolean {
-        return this.isDirty;
     }
 
     public addItem(item: string): EvenBetterListElement {
         this.items.push(item);
-        this.isDirty = true;
+        this.markDirty();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" added item.`);
         return this;
     }
 
     public removeItem(index: number): EvenBetterListElement {
+        if (index < 0 || index >= this.items.length) {
+            EvenBetterSdk.logger.warn(
+                `[Element] List element "${this.id}" cannot remove item at invalid index ${index}.`,
+            );
+            return this;
+        }
+
         this.items.splice(index, 1);
-        this.isDirty = true;
+        this.markDirty();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" removed item at ${index}.`);
         return this;
     }
 
     public setItems(items: string[]): EvenBetterListElement {
-        this.items = items;
-        this.isDirty = true;
+        if (areStringArraysEqual(this.items, items)) {
+            EvenBetterSdk.logger.debug(
+                `[Element] List element "${this.id}" items unchanged (${items.length} total).`,
+            );
+            return this;
+        }
+
+        this.items = [...items];
+        this.markDirty();
         EvenBetterSdk.logger.debug(
             `[Element] List element "${this.id}" items set (${items.length} total).`,
         );
@@ -232,8 +301,22 @@ export class EvenBetterListElement extends EvenBetterElement {
     }
 
     public replaceItem(index: number, item: string): EvenBetterListElement {
+        if (index < 0 || index >= this.items.length) {
+            EvenBetterSdk.logger.warn(
+                `[Element] List element "${this.id}" cannot replace item at invalid index ${index}.`,
+            );
+            return this;
+        }
+
+        if (this.items[index] === item) {
+            EvenBetterSdk.logger.debug(
+                `[Element] List element "${this.id}" item at ${index} unchanged.`,
+            );
+            return this;
+        }
+
         this.items[index] = item;
-        this.isDirty = true;
+        this.markDirty();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" replaced item at ${index}.`);
         return this;
     }
@@ -255,26 +338,60 @@ export class EvenBetterListElement extends EvenBetterElement {
     }
 
     public setBorder(setter: (border: Border) => void): EvenBetterListElement {
+        const previousBorder = this.border
+            ? { width: this.border.width, color: this.border.color, radius: this.border.radius }
+            : { width: 0, color: '#000000', radius: 0 };
+
         if (this.border === null) {
             this.border = new Border(0, '#000000', 0);
         }
 
         setter(this.border);
-        this.isDirty = true;
+
+        const currentBorder = {
+            width: this.border.width,
+            color: this.border.color,
+            radius: this.border.radius,
+        };
+
+        if (
+            previousBorder.width === currentBorder.width
+            && previousBorder.color === currentBorder.color
+            && previousBorder.radius === currentBorder.radius
+        ) {
+            EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" border unchanged.`);
+            return this;
+        }
+
+        this.markDirty();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" border updated.`);
         return this;
     }
 
     public setItemWidth(width: number): EvenBetterListElement {
+        if (this.itemWidth === width) {
+            EvenBetterSdk.logger.debug(
+                `[Element] List element "${this.id}" item width unchanged (${width}).`,
+            );
+            return this;
+        }
+
         this.itemWidth = width;
-        this.isDirty = true;
+        this.markDirty();
         EvenBetterSdk.logger.debug(`[Element] List element "${this.id}" item width set to ${width}.`);
         return this;
     }
 
     public setIsItemSelectBorderEn(isItemSelectBorderEn: boolean): EvenBetterListElement {
+        if (this.isItemSelectBorderEn === isItemSelectBorderEn) {
+            EvenBetterSdk.logger.debug(
+                `[Element] List element "${this.id}" item select border unchanged (${isItemSelectBorderEn}).`,
+            );
+            return this;
+        }
+
         this.isItemSelectBorderEn = isItemSelectBorderEn;
-        this.isDirty = true;
+        this.markDirty();
         EvenBetterSdk.logger.debug(
             `[Element] List element "${this.id}" item select border set to ${isItemSelectBorderEn}.`,
         );
@@ -284,7 +401,8 @@ export class EvenBetterListElement extends EvenBetterElement {
 
 export class EvenBetterTextElement extends EvenBetterElementWithPartialUpdate {
     private border: Border | null = null;
-    private isDirty = true;
+    private contentDirty = true;
+    private layoutDirty = true;
 
     constructor(
         page: EvenBetterPage,
@@ -295,7 +413,9 @@ export class EvenBetterTextElement extends EvenBetterElementWithPartialUpdate {
     }
 
     public override async afterRender(): Promise<void> {
-        this.isDirty = false;
+        await super.afterRender();
+        this.contentDirty = false;
+        this.layoutDirty = false;
         EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" rendered.`);
     }
 
@@ -311,28 +431,72 @@ export class EvenBetterTextElement extends EvenBetterElementWithPartialUpdate {
     }
 
     public override get didChange(): boolean {
-        return this.isDirty;
+        return this.contentDirty || this.layoutDirty;
+    }
+
+    public override get canPartialUpdate(): boolean {
+        return this.contentDirty && !this.layoutDirty;
+    }
+
+    protected override markLayoutDirty(): void {
+        this.layoutDirty = true;
+    }
+
+    private markContentDirty(): void {
+        this.contentDirty = true;
     }
 
     public setBorder(setter: (border: Border) => void): EvenBetterTextElement {
+        const previousBorder = this.border
+            ? { width: this.border.width, color: this.border.color, radius: this.border.radius }
+            : { width: 0, color: '#000000', radius: 0 };
+
         if (this.border === null) {
             this.border = new Border(0, '#000000', 0);
         }
 
         setter(this.border);
-        this.isDirty = true;
+
+        const currentBorder = {
+            width: this.border.width,
+            color: this.border.color,
+            radius: this.border.radius,
+        };
+
+        if (
+            previousBorder.width === currentBorder.width
+            && previousBorder.color === currentBorder.color
+            && previousBorder.radius === currentBorder.radius
+        ) {
+            EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" border unchanged.`);
+            return this;
+        }
+
+        this.markLayoutDirty();
         EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" border updated.`);
         return this;
     }
 
     public setContent(content: string): EvenBetterTextElement {
+        if (this.content === content) {
+            EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" content unchanged.`);
+            return this;
+        }
+
         this.content = content;
-        this.isDirty = true;
+        this.markContentDirty();
         EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" content updated.`);
         return this;
     }
 
     public async updateWithEvenHubSdk(): Promise<boolean> {
+        if (!this.canPartialUpdate) {
+            EvenBetterSdk.logger.warn(
+                `[Element] Text element "${this.id}" requires full render; partial update skipped.`,
+            );
+            return false;
+        }
+
         EvenBetterSdk.logger.info(`[Element] Updating text element "${this.id}" via Even hub SDK.`);
         try {
             const bridge = await EvenBetterSdk.getRawBridge();
@@ -341,7 +505,7 @@ export class EvenBetterTextElement extends EvenBetterElementWithPartialUpdate {
                 containerName: this.id.toString(),
                 content: this.content,
             }));
-            this.isDirty = false;
+            this.contentDirty = false;
             EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" update result: ${result}.`);
             return result;
         } catch (error) {
