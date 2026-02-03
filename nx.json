@@ -58,7 +58,7 @@
     }
   ],
   "release": {
-    "projects": ["@jappyjan/even-realities-ui"],
+    "projects": ["@jappyjan/even-realities-ui", "@jappyjan/even-better-sdk"],
     "version": {
       "preVersionCommand": "npx nx run-many -t build"
     }

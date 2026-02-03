@@ -7,7 +7,7 @@ configurable logging.
 
 ## Install
 
-This package is currently private to the workspace.
+This package is published to npm.
 
 ```
 npm install @jappyjan/even-better-sdk
