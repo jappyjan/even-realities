@@ -1,3 +1,13 @@
+## 0.0.7 (2026-02-03)
+
+### 🚀 Features
+
+- even better sdk release config ([8e5f4fa](https://github.com/jappyjan/even-realities/commit/8e5f4fa))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.6 (2026-02-03)
 
 ### 🚀 Features
