@@ -114,8 +114,13 @@ export class EvenBetterSdk {
       const bridge = await waitForEvenAppBridge();
       EvenBetterSdk.logger.debug('[SDK] Even app bridge detected, waiting for readiness.');
 
+      let waitCount = 0;
       while (!bridge.ready) {
         await new Promise(resolve => setTimeout(resolve, 100));
+        waitCount += 1;
+        if (waitCount % 10 === 0) {
+          EvenBetterSdk.logger.info(`[SDK] Still waiting for bridge.ready (${waitCount * 100}ms elapsed).`);
+        }
       }
 
       EvenBetterSdk.logger.info('[SDK] Even app bridge is ready.');
@@ -151,13 +156,17 @@ export class EvenBetterSdk {
   }
 
   public async renderPage(page: EvenBetterPage): Promise<void> {
+    EvenBetterSdk.logger.debug(`[SDK] adding render request for page "${page.id}".`);
     const promise = new Promise<void>((resolve) => {
       EvenBetterSdk.renderRequests.push({ page, resolve });
     });
 
+    EvenBetterSdk.logger.debug(`[SDK] starting to process render requests.`);
     EvenBetterSdk.processRenderRequests();
 
-    return promise;
+    EvenBetterSdk.logger.debug(`[SDK] waiting for render request to complete.`);
+    await promise;
+    EvenBetterSdk.logger.debug(`[SDK] render request for page "${page.id}" completed.`);
   }
 
   private static async processRenderRequests(): Promise<void> {
@@ -169,6 +178,7 @@ export class EvenBetterSdk {
 
     const request = EvenBetterSdk.renderRequests.shift();
     if (!request) {
+      EvenBetterSdk.renderInProgress = false;
       return;
     }
 
@@ -190,8 +200,12 @@ export class EvenBetterSdk {
         return element instanceof EvenBetterElementWithPartialUpdate;
       }) as EvenBetterElementWithPartialUpdate[];
 
+      const changedElements = pageElements.filter((element) => element.didChange);
+      const hasChangedElementWithoutPartialUpdate = changedElements.some(
+        (element) => !(element instanceof EvenBetterElementWithPartialUpdate)
+      );
       const isSamePage = EvenBetterSdk.currentPageId === page.id;
-      const requiresFullPageRender = partialUpdateElements.length !== pageElements.length || !isSamePage;
+      const requiresFullPageRender = !isSamePage || hasChangedElementWithoutPartialUpdate;
       EvenBetterSdk.logger.debug(
         `[SDK] Page "${page.id}" requires full render: ${requiresFullPageRender} (Same page: ${isSamePage}).`,
       );
@@ -223,12 +237,10 @@ export class EvenBetterSdk {
 
       EvenBetterSdk.logger.debug(`[SDK] Page "${page.id}" render complete with partial updates.`);
     } finally {
+      EvenBetterSdk.logger.debug(`[SDK] Resolving render request for page "${page.id}".`);
       resolve();
-
-      setTimeout(() => {
-        EvenBetterSdk.renderInProgress = false;
-        EvenBetterSdk.processRenderRequests();
-      }, 300);
+      EvenBetterSdk.renderInProgress = false;
+      setTimeout(() => void EvenBetterSdk.processRenderRequests(), 0);
     }
   }
 
