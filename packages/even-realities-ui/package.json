@@ -40,6 +40,15 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jappyjan/even-realities.git",
+    "directory": "packages/even-realities-ui"
+  },
+  "homepage": "https://github.com/jappyjan/even-realities/tree/main/packages/even-realities-ui",
+  "bugs": {
+    "url": "https://github.com/jappyjan/even-realities/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
