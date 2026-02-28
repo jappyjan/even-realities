@@ -1,3 +1,13 @@
+## 0.0.10 (2026-02-28)
+
+### 🩹 Fixes
+
+- unblock render and add debug logs ([3ed12f5](https://github.com/jappyjan/even-realities/commit/3ed12f5))
+
+### ❤️ Thank You
+
+- Jan Jaap
+
 ## 0.0.9 (2026-02-20)
 
 ### 🩹 Fixes
