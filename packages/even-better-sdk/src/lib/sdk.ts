@@ -211,7 +211,7 @@ export class EvenBetterSdk {
       );
 
       if (requiresFullPageRender) {
-        if (!isSamePage) {
+        if (EvenBetterSdk.currentPageId === null) {
           EvenBetterSdk.logger.info(`[SDK] Creating startup page container for "${page.id}".`);
           await EvenBetterSdk.bridge!.createStartUpPageContainer(page.toEvenSdkPage());
         } else {
