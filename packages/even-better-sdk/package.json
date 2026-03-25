@@ -20,7 +20,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@evenrealities/even_hub_sdk": "^0.0.6",
+    "@evenrealities/even_hub_sdk": "^0.0.9",
     "nanoid": "^3.3.11"
   }
 }
