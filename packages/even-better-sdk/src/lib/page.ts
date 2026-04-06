@@ -1,5 +1,5 @@
 import { EvenBetterSdk } from "./sdk.js";
-import { EvenBetterElement, EvenBetterListElement, EvenBetterTextElement } from "./element.js";
+import { EvenBetterElement, EvenBetterListElement, EvenBetterTextElement, EvenBetterImageElement } from "./element.js";
 import { CreateStartUpPageContainer, ListContainerProperty, TextContainerProperty } from "@evenrealities/even_hub_sdk";
 import { nanoid } from "nanoid";
 
@@ -65,6 +65,15 @@ export class EvenBetterPage {
         this.elements.set(element.id, element);
         EvenBetterSdk.logger.debug(
             `[Page] List element "${element.id}" added to page "${this.id}".`,
+        );
+        return element;
+    }
+      public addImageElement(raw: Uint8Array): EvenBetterImageElement {
+        EvenBetterSdk.logger.info(`[Page] Adding image element to page "${this.id}".`);
+        const element = new EvenBetterImageElement(this, raw);
+        this.elements.set(element.id, element);
+        EvenBetterSdk.logger.debug(
+            `[Page] Image element "${element.id}" added to page "${this.id}".`,
         );
         return element;
     }

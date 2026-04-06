@@ -65,7 +65,8 @@
   },
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["default", "!{workspaceRoot}/node_modules/**"]
     }
   },
   "generators": {

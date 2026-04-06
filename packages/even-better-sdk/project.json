@@ -1,0 +1,16 @@
+{
+  "name": "even-better-sdk",
+  "root": "packages/even-better-sdk",
+  "sourceRoot": "packages/even-better-sdk/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/packages/even-better-sdk",
+        "tsConfig": "packages/even-better-sdk/tsconfig.lib.json",
+        "packageJson": "packages/even-better-sdk/package.json"
+      }
+    }
+  }
+}
