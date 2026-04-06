@@ -1,4 +1,6 @@
-import { ListContainerProperty, ListItemContainerProperty, TextContainerProperty, TextContainerUpgrade } from "@evenrealities/even_hub_sdk";
+import { ListContainerProperty, ListItemContainerProperty, 
+     TextContainerProperty, TextContainerUpgrade, 
+     ImageContainerProperty, ImageRawDataUpdate, ImageRawDataUpdateResult } from "@evenrealities/even_hub_sdk";
 import { EvenBetterPage } from "./page.js";
 import { EvenBetterSdk } from "./sdk.js";
 
@@ -14,6 +16,7 @@ export type BaseContainerProperty = {
 export enum EvenBetterElementType {
     LIST = 'list',
     TEXT = 'text',
+    IMAGE = 'image',
 }
 
 export class EvenBetterElementPosition {
@@ -281,6 +284,72 @@ export class EvenBetterListElement extends EvenBetterElement {
         return this;
     }
 }
+
+export class EvenBetterImageElement extends EvenBetterElementWithPartialUpdate {
+
+    constructor(
+        page: EvenBetterPage,
+        raw: Uint8Array
+    ) {
+        super(page, EvenBetterElementType.IMAGE);
+        this.raw = raw;
+        return this;
+    }
+
+    private isDirty = true;
+    raw: Uint8Array = new Uint8Array();
+
+    public override async afterRender(): Promise<void> {
+        this.isDirty = false;
+        EvenBetterSdk.logger.debug(`[Element] Image element "${this.id}" rendered.`);
+    }
+
+    public override get didChange(): boolean {
+        return this.isDirty;
+    }
+
+    public setContent(imageData: Uint8Array): EvenBetterImageElement {
+        this.raw = imageData
+        this.isDirty = true;
+        EvenBetterSdk.logger.debug(`[Element] Image element "${this.id}" content updated.`);
+        return this;
+    }
+
+    
+    public override toEvenSdkElement(): ImageContainerProperty {
+        EvenBetterSdk.logger.debug(`[Element] Serializing Image element "${this.id}".`);
+        return ImageContainerProperty.fromJson({
+            ...super.toEvenSdkElement()
+        });
+    }
+
+    public async updateWithEvenHubSdk(): Promise<boolean> {
+        EvenBetterSdk.logger.info(`[Element] Updating image element "${this.id}" via Even hub SDK.`);
+        try {
+            const bridge = await EvenBetterSdk.getRawBridge();
+            const result = await bridge.updateImageRawData(
+                ImageRawDataUpdate.fromJson({
+                containerID: this.id,
+                containerName: this.id.toString(),
+                imageData: this.raw,
+            }));
+            let success = result === ImageRawDataUpdateResult.success 
+            if (!success)
+            {
+                EvenBetterSdk.logger.error(`[Element] Failed to update image with result ${result} and image data of size ${this.raw.length}`);
+            } else {
+                this.isDirty = false;
+            }
+            return success;
+        } catch (error) {
+            EvenBetterSdk.logger.error(`[Element] Image element "${this.id}" update failed.`);
+            throw error;
+        }
+    }
+
+   
+}
+
 
 export class EvenBetterTextElement extends EvenBetterElementWithPartialUpdate {
     private border: Border | null = null;
