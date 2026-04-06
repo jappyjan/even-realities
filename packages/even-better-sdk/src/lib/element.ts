@@ -285,7 +285,7 @@ export class EvenBetterListElement extends EvenBetterElement {
     }
 }
 
-export class EvenBetterImageElement extends EvenBetterElement {
+export class EvenBetterImageElement extends EvenBetterElementWithPartialUpdate {
 
     constructor(
         page: EvenBetterPage,
@@ -317,10 +317,9 @@ export class EvenBetterImageElement extends EvenBetterElement {
 
     
     public override toEvenSdkElement(): ImageContainerProperty {
-        EvenBetterSdk.logger.debug(`[Element] Serializing list element "${this.id}".`);
+        EvenBetterSdk.logger.debug(`[Element] Serializing Image element "${this.id}".`);
         return ImageContainerProperty.fromJson({
-            ...super.toEvenSdkElement(),
-            imageData: this.raw,
+            ...super.toEvenSdkElement()
         });
     }
 
@@ -332,13 +331,18 @@ export class EvenBetterImageElement extends EvenBetterElement {
                 ImageRawDataUpdate.fromJson({
                 containerID: this.id,
                 containerName: this.id.toString(),
-                imageDate: this.raw,
+                imageData: this.raw,
             }));
-            this.isDirty = false;
-            EvenBetterSdk.logger.debug(`[Element] Text element "${this.id}" update result: ${result}.`);
-            return result === ImageRawDataUpdateResult.success;
+            let success = result === ImageRawDataUpdateResult.success 
+            if (!success)
+            {
+                EvenBetterSdk.logger.error(`[Element] Failed to update image with result ${result} and image data of size ${this.raw.length}`);
+            } else {
+                this.isDirty = false;
+            }
+            return success;
         } catch (error) {
-            EvenBetterSdk.logger.error(`[Element] Text element "${this.id}" update failed.`);
+            EvenBetterSdk.logger.error(`[Element] Image element "${this.id}" update failed.`);
             throw error;
         }
     }

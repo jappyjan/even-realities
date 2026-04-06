@@ -1,6 +1,6 @@
 import { EvenBetterSdk } from "./sdk.js";
 import { EvenBetterElement, EvenBetterListElement, EvenBetterTextElement, EvenBetterImageElement } from "./element.js";
-import { CreateStartUpPageContainer, ListContainerProperty, TextContainerProperty } from "@evenrealities/even_hub_sdk";
+import { CreateStartUpPageContainer, ImageContainerProperty, ListContainerProperty, TextContainerProperty } from "@evenrealities/even_hub_sdk";
 import { nanoid } from "nanoid";
 
 export class EvenBetterPage {
@@ -16,7 +16,16 @@ export class EvenBetterPage {
 
     public async render(): Promise<void> {
         EvenBetterSdk.logger.info(`[Page] Rendering EvenBetterPage "${this.id}".`);
-        return this.sdk.renderPage(this);
+        let ret = this.sdk.renderPage(this);
+
+        //we can only push content to the image elements once the page has rendered
+        let array = Array.from(this.elements.values()).filter(element => element.type === 'image')
+        array.forEach(element => {
+            (element as EvenBetterImageElement).updateWithEvenHubSdk()
+        });
+
+        return ret;
+
     }
 
     public toEvenSdkPage(): CreateStartUpPageContainer {
@@ -34,6 +43,9 @@ export class EvenBetterPage {
                 ...element.toEvenSdkElement(),
                 isEventCapture: element.id === this.eventCaptureElementId ? 1 : 0,
             }) as TextContainerProperty),
+            imageObject: elements.filter(element => element.type == 'image').map(element => ({
+                ...element.toEvenSdkElement()
+            }) as ImageContainerProperty),
         });
     }
 
